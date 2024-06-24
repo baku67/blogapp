@@ -1,0 +1,8 @@
+@import './variables.scss';
+@import './reset.scss';
+@import './base.scss';
+
+// D'abord les mixins ensuite les classes (order)
+@import './mixins.scss';
+@import './classes.scss';
+@import './utils.scss';
