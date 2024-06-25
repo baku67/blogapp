@@ -24,6 +24,7 @@ function openModal(question) {
   body.append(calc);
 
   // Fonction "executrice" avec 2 fonctions: si reussi ou echec
+  // reject fonctionne avec try/catch (pas ici mais autours de l'appel de openModal())
   return new Promise((resolve, reject) => {
     calc.addEventListener('click', () => {
       resolve(false);

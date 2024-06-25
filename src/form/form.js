@@ -1,11 +1,13 @@
+
 import './form.scss';
 import { API_URL } from '../utils';
+import { openModal } from '../assets/js/modal';
 
 const form = document.querySelector('form')
 const errorList = document.getElementById('errors')
 
 const cancelButton = document.querySelector('.btn-secondary')
-cancelButton.addEventListener('click', () => location.assign('/') )
+// cancelButton.addEventListener('click', () => location.assign('/') )
 
 // idArticle déclarée dans le contexte global
 let idArticle;
@@ -40,6 +42,14 @@ const fillForm = (article) => {
 }
 
 
+cancelButton.addEventListener('click', async () => {
+
+    const answer = await openModal("Voulez-vous vraiment annuler ?")
+    if(answer) {
+        location.assign('/')
+    }
+
+})
 
 
 // *** ADD ou EDIT
