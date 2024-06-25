@@ -7,7 +7,7 @@ const articlesContainer = document.querySelector('.articles-container')
 // La fonction ne va pas au meme rythme car elle attend des infos
 const fecthArticles = async () => {
 
-    // Pas d'arguments = GET (codé comme ça en backend !)
+    
     const response = await fetch(API_URL)
     const articles = await response.json()
 
