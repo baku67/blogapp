@@ -650,8 +650,9 @@ __webpack_require__.r(__webpack_exports__);
 
 const articlesContainer = document.querySelector('.articles-container');
 const categoriesContainer = document.querySelector('.categories');
+// Contexte global pour éviter pb de scope
 let filter;
-let articles;
+let articles = [];
 
 // La fonction ne va pas au meme rythme car elle attend des infos
 const fecthArticles = async () => {
@@ -664,7 +665,7 @@ const fecthArticles = async () => {
   }
   createDOMArticles();
   /* eslint-disable */
-  console.log(...oo_oo(`2369654452_23_4_23_25_4`, articles));
+  console.log(...oo_oo(`3783825957_24_4_24_25_4`, articles));
   createMenuCategories();
 };
 
@@ -682,7 +683,7 @@ const createMenuCategories = () => {
   // const categoriesArray = Object.keys(categories).map(category => [category, categories[category]]) //
   const categoriesArray = Object.entries(categories);
   /* eslint-disable */
-  console.log(...oo_oo(`2369654452_42_4_42_32_4`, categoriesArray));
+  console.log(...oo_oo(`3783825957_44_4_44_32_4`, categoriesArray));
   displayMenuCategories(categoriesArray);
 };
 const displayMenuCategories = categoriesArray => {
@@ -690,6 +691,10 @@ const displayMenuCategories = categoriesArray => {
     const li = document.createElement('li');
     li.innerHTML = `${categoryElement[0]} <span>(${categoryElement[1]})</span>`;
     li.addEventListener('click', e => {
+      liElements.forEach(li => {
+        li.classList.remove('active');
+      });
+      li.classList.add('active');
       filter = categoryElement[0];
       createDOMArticles();
     });

@@ -4,8 +4,9 @@ import { API_URL } from './utils';
 
 const articlesContainer = document.querySelector('.articles-container')
 const categoriesContainer = document.querySelector('.categories')
-let filter
-let articles
+// Contexte global pour éviter pb de scope
+let filter;
+let articles = [];
 
 
 // La fonction ne va pas au meme rythme car elle attend des infos
@@ -24,6 +25,7 @@ const fecthArticles = async () => {
 
     createMenuCategories()
 }
+
 
 // reduce() des categories à partir des articles
 const createMenuCategories = () => {
@@ -45,12 +47,15 @@ const createMenuCategories = () => {
 }
 
 
-
 const displayMenuCategories = (categoriesArray) => {
     const liElements = categoriesArray.map( (categoryElement) => {
         const li = document.createElement('li')
         li.innerHTML = `${categoryElement[0]} <span>(${categoryElement[1]})</span>`
         li.addEventListener('click', (e) => {
+            liElements.forEach((li) => {
+                li.classList.remove('active')
+            })
+            li.classList.add('active')
             filter = categoryElement[0]
             createDOMArticles()
         })
@@ -60,7 +65,6 @@ const displayMenuCategories = (categoriesArray) => {
     categoriesContainer.innerHTML = ""
     categoriesContainer.append( ... liElements) // spread operator: explose les elements de l'array à l'intérieur
 }
-
 
 
 

@@ -30,10 +30,7 @@ header {
         @include flex;
 
         li {
-            .active {
-                font-weight: 700;
-                text-decoration: underline;
-            }
+
 
             .header-nav {
                 font-size: 1.8rem;
@@ -41,6 +38,11 @@ header {
             }
         }
     }
+}
+
+.categories .active {
+    font-weight: 700;
+    color: $primary-color;
 }
 
 .content {
