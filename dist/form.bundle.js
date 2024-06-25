@@ -623,6 +623,37 @@ const errorList = document.getElementById('errors');
 const cancelButton = document.querySelector('.btn-secondary');
 cancelButton.addEventListener('click', () => location.assign('/'));
 
+// idArticle déclarée dans le contexte global
+let idArticle;
+
+// *** EDIT
+const initForm = async () => {
+  // Récupération de l'id article dans l'URL si edit
+  const params = new URL(location.href);
+  /* eslint-disable */
+  console.log(...oo_oo(`2774697986_20_4_20_23_4`, params));
+  // searchParams = lazyObject (il donne rien tant qu'on demande pas)
+  idArticle = params.searchParams.get('id');
+  if (idArticle) {
+    const response = await fetch(`${_utils__WEBPACK_IMPORTED_MODULE_1__.API_URL}/${idArticle}`);
+    const article = await response.json();
+    fillForm(article);
+    /* eslint-disable */
+    console.log(...oo_oo(`2774697986_28_8_28_28_4`, article));
+  }
+};
+initForm();
+const fillForm = article => {
+  const formFields = form.querySelectorAll('input, select, textarea');
+  // juste besoin de 'name' et 'value':
+  /* eslint-disable */
+  console.log(...oo_oo(`2774697986_36_4_36_27_4`, formFields));
+  formFields.forEach(field => {
+    field.value = article[field.name];
+  });
+};
+
+// *** ADD ou EDIT
 // async est la fonction qui contient le await
 form.addEventListener('submit', async event => {
   event.preventDefault();
@@ -630,23 +661,35 @@ form.addEventListener('submit', async event => {
   const entries = formData.entries();
   const article = Object.fromEntries(entries);
   /* eslint-disable */
-  console.log(...oo_oo(`3459824580_20_4_20_24_4`, article));
+  console.log(...oo_oo(`2774697986_55_4_55_24_4`, article));
   if (formIsValid(article)) {
     const json = JSON.stringify(article);
-
-    // Lors du survol sur fetch() on voit <promesse> donc il faut mettre await
-    const response = await fetch(_utils__WEBPACK_IMPORTED_MODULE_1__.API_URL, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: json
-    });
+    let response;
+    if (idArticle) {
+      // Lors du survol sur fetch() on voit <promesse> donc il faut mettre await
+      response = await fetch(`${_utils__WEBPACK_IMPORTED_MODULE_1__.API_URL}/${idArticle}`, {
+        method: "PUT",
+        // ou PATCH pour modifier juste les données qui changent
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: json
+      });
+    } else {
+      // Lors du survol sur fetch() on voit <promesse> donc il faut mettre await
+      response = await fetch(_utils__WEBPACK_IMPORTED_MODULE_1__.API_URL, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: json
+      });
+    }
 
     // await car json = <Promise>
     const body = await response.json();
     /* eslint-disable */
-    console.log(...oo_oo(`3459824580_36_8_36_25_4`, body));
+    console.log(...oo_oo(`2774697986_81_8_81_25_4`, body));
 
     // redirect accueil après si success
     if (response.status < 300) {

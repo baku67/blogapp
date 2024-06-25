@@ -661,10 +661,10 @@ const fecthArticles = async () => {
   }
   createDOMArticles(articles);
   /* eslint-disable */
-  console.log(...oo_oo(`3346095971_20_4_20_25_4`, articles));
+  console.log(...oo_oo(`3670595713_20_4_20_25_4`, articles));
 };
 const createDOMArticles = articles => {
-  // Prend un array et le transfomr en nouveau array avec un callback
+  // map(): Prend un array et le transfomr en nouveau array 
   // Si accolades => return (sinon fleche joue le role de return) (!)
   const articlesDOM = articles.map(article => {
     const articleNode = document.createElement('div');
@@ -676,7 +676,7 @@ const createDOMArticles = articles => {
             <p class="article-content">${article.content}</p>
             <div class="article-actions">
                 <button class="btn btn-danger" data-id=${article._id}>Supprimer</button>
-                <button class="btn btn-primary">Editer</button>
+                <button class="btn btn-primary" data-id=${article._id}>Editer</button>
             </div>
         `;
     return articleNode;
@@ -695,6 +695,16 @@ const createDOMArticles = articles => {
         method: "DELETE"
       });
       fecthArticles();
+    });
+  });
+
+  // Edit Buttons:
+  const editButtons = articlesContainer.querySelectorAll('.btn-primary');
+  editButtons.forEach(btn => {
+    btn.addEventListener('click', e => {
+      // On passe l'id en query-string dans l'URL
+      const idArticle = e.target.dataset.id;
+      location.assign(`/form.html?id=${idArticle}`);
     });
   });
 };

@@ -7,7 +7,42 @@ const errorList = document.getElementById('errors')
 const cancelButton = document.querySelector('.btn-secondary')
 cancelButton.addEventListener('click', () => location.assign('/') )
 
+// idArticle déclarée dans le contexte global
+let idArticle;
 
+
+
+// *** EDIT
+const initForm = async () => {
+
+    // Récupération de l'id article dans l'URL si edit
+    const params = new URL(location.href)
+    console.log(params)
+    // searchParams = lazyObject (il donne rien tant qu'on demande pas)
+    idArticle = params.searchParams.get('id')
+
+    if(idArticle) {
+        const response = await fetch(`${API_URL}/${idArticle}`)
+        const article = await response.json()
+        fillForm(article)
+        console.log(article)
+    }
+}
+initForm()
+
+const fillForm = (article) => {
+    const formFields = form.querySelectorAll('input, select, textarea')
+    // juste besoin de 'name' et 'value':
+    console.log(formFields)
+    formFields.forEach((field) => {
+        field.value = article[field.name]    
+    })
+}
+
+
+
+
+// *** ADD ou EDIT
 // async est la fonction qui contient le await
 form.addEventListener('submit', async (event) => {
 
@@ -22,29 +57,35 @@ form.addEventListener('submit', async (event) => {
     if(formIsValid(article)) {
 
         const json = JSON.stringify(article)
+        let response
 
-        // Lors du survol sur fetch() on voit <promesse> donc il faut mettre await
-        const response = await fetch(API_URL, {
-            method: "POST",
-            headers: {'Content-Type': 'application/json'},
-            body: json,
-        })
+        if(idArticle) {
+            // Lors du survol sur fetch() on voit <promesse> donc il faut mettre await
+            response = await fetch(`${API_URL}/${idArticle}`, {
+                method: "PUT", // ou PATCH pour modifier juste les données qui changent
+                headers: {'Content-Type': 'application/json'},
+                body: json,
+            })
+        } else {
+            // Lors du survol sur fetch() on voit <promesse> donc il faut mettre await
+            response = await fetch(API_URL, {
+                method: "POST",
+                headers: {'Content-Type': 'application/json'},
+                body: json,
+            })
+        }
 
 
         // await car json = <Promise>
         const body = await response.json();
         console.log(body)
 
+        
         // redirect accueil après si success
         if(response.status < 300) {
             location.assign('/')
         }
-        
-
-
-        
     }
-
 })
 
 
