@@ -1,3 +1,4 @@
+import { openModal } from './assets/js/modal';
 import './index.scss';
 import { API_URL } from './utils';
 
@@ -20,7 +21,7 @@ const fecthArticles = async () => {
         articles = [articles]
     }
 
-    createDOMArticles()
+    createDOMArticles() // affichage initiale sans filtre
     console.log(articles)
 
     createMenuCategories()
@@ -48,16 +49,29 @@ const createMenuCategories = () => {
 
 
 const displayMenuCategories = (categoriesArray) => {
+
     const liElements = categoriesArray.map( (categoryElement) => {
+
         const li = document.createElement('li')
         li.innerHTML = `${categoryElement[0]} <span>(${categoryElement[1]})</span>`
+
         li.addEventListener('click', (e) => {
+
             liElements.forEach((li) => {
                 li.classList.remove('active')
             })
-            li.classList.add('active')
-            filter = categoryElement[0]
-            createDOMArticles()
+
+            if (filter === categoryElement[0]) {
+                // la catégorie est déja selectionné, déselectionner
+                filter = null;
+            }
+            else {
+                // Pas de catégorie selectionnée, séléctionne
+                li.classList.add('active')
+                filter = categoryElement[0]
+            }
+
+            createDOMArticles() // recharger le DOM
         })
         return li
     })
@@ -114,14 +128,18 @@ const createDOMArticles = () => {
 
     deleteButtons.forEach(btn => {
         btn.addEventListener('click', async (e) => {
+
             const idArticle = e.target.dataset.id
 
-            // const response = await fetch(`${API_URL}/${idArticle}`,
-            await fetch(`${API_URL}/${idArticle}`,
-                {
-                    method: "DELETE"
-                }
-            )
+            const answer = await openModal("Êtes-vous sûr de vouloir supprimer cet article ?")
+            if(answer) {
+                await fetch(`${API_URL}/${idArticle}`,
+                    {
+                        method: "DELETE"
+                    }
+                )
+            }
+
             fecthArticles()
         })
     });
