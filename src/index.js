@@ -9,7 +9,7 @@ const fecthArticles = async () => {
 
     
     const response = await fetch(API_URL)
-    const articles = await response.json()
+    let articles = await response.json()
 
     // Map marche que sur un Array, ducoup on met l'unique element dans un array
     if(!(articles instanceof Array)) {
@@ -33,10 +33,12 @@ const createDOMArticles = (articles) => {
         `
             <img src=${article.image.startsWith('http') ? article.image : "assets/images/default_profil.png"} alt="photo">
             <h2>${article.title}</h2>
-            <p class="article-author">${article.author}</p>
+            <p class="article-author">${article.author} - <span>${
+                new Date(article.createdAt).toLocaleDateString('fr-FR')
+            }</span></p>
             <p class="article-content">${article.content}</p>
             <div class="article-actions">
-                <button class="btn btn-danger">Supprimer</button>
+                <button class="btn btn-danger" data-id=${article._id}>Supprimer</button>
                 <button class="btn btn-primary">Editer</button>
             </div>
         `
@@ -45,6 +47,26 @@ const createDOMArticles = (articles) => {
 
     articlesContainer.innerHTML = '' // évite cumul
     articlesContainer.append(...articlesDOM) // On 'explose' articlesDOM dans appendChild
+
+
+    // Suppr boutons:
+    const deleteButtons = articlesContainer.querySelectorAll('.btn-danger')
+
+    deleteButtons.forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const idArticle = e.target.dataset.id
+
+            // const response = await fetch(`${API_URL}/${idArticle}`,
+            await fetch(`${API_URL}/${idArticle}`,
+                {
+                    method: "DELETE"
+                }
+            )
+            fecthArticles()
+        })
+    });
 }
+
+
 
 fecthArticles()

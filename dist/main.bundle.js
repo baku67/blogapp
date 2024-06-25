@@ -653,7 +653,7 @@ const articlesContainer = document.querySelector('.articles-container');
 // La fonction ne va pas au meme rythme car elle attend des infos
 const fecthArticles = async () => {
   const response = await fetch(_utils__WEBPACK_IMPORTED_MODULE_1__.API_URL);
-  const articles = await response.json();
+  let articles = await response.json();
 
   // Map marche que sur un Array, ducoup on met l'unique element dans un array
   if (!(articles instanceof Array)) {
@@ -661,7 +661,7 @@ const fecthArticles = async () => {
   }
   createDOMArticles(articles);
   /* eslint-disable */
-  console.log(...oo_oo(`373176844_20_4_20_25_4`, articles));
+  console.log(...oo_oo(`3346095971_20_4_20_25_4`, articles));
 };
 const createDOMArticles = articles => {
   // Prend un array et le transfomr en nouveau array avec un callback
@@ -672,10 +672,10 @@ const createDOMArticles = articles => {
     articleNode.innerHTML = `
             <img src=${article.image.startsWith('http') ? article.image : "assets/images/default_profil.png"} alt="photo">
             <h2>${article.title}</h2>
-            <p class="article-author">${article.author}</p>
+            <p class="article-author">${article.author} - <span>${new Date(article.createdAt).toLocaleDateString('fr-FR')}</span></p>
             <p class="article-content">${article.content}</p>
             <div class="article-actions">
-                <button class="btn btn-danger">Supprimer</button>
+                <button class="btn btn-danger" data-id=${article._id}>Supprimer</button>
                 <button class="btn btn-primary">Editer</button>
             </div>
         `;
@@ -683,6 +683,20 @@ const createDOMArticles = articles => {
   });
   articlesContainer.innerHTML = ''; // évite cumul
   articlesContainer.append(...articlesDOM); // On 'explose' articlesDOM dans appendChild
+
+  // Suppr boutons:
+  const deleteButtons = articlesContainer.querySelectorAll('.btn-danger');
+  deleteButtons.forEach(btn => {
+    btn.addEventListener('click', async e => {
+      const idArticle = e.target.dataset.id;
+
+      // const response = await fetch(`${API_URL}/${idArticle}`,
+      await fetch(`${_utils__WEBPACK_IMPORTED_MODULE_1__.API_URL}/${idArticle}`, {
+        method: "DELETE"
+      });
+      fecthArticles();
+    });
+  });
 };
 fecthArticles()
 /* istanbul ignore next */ /* c8 ignore start */ /* eslint-disable */;

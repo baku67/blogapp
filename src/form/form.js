@@ -4,6 +4,8 @@ import { API_URL } from '../utils';
 const form = document.querySelector('form')
 const errorList = document.getElementById('errors')
 
+const cancelButton = document.querySelector('.btn-secondary')
+cancelButton.addEventListener('click', () => location.assign('/') )
 
 
 // async est la fonction qui contient le await
@@ -44,8 +46,6 @@ form.addEventListener('submit', async (event) => {
     }
 
 })
-
-
 
 
 
